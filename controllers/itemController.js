@@ -28,9 +28,21 @@ exports.item_update_post = function (req, res) {
 };
 
 exports.item_detail = function (req, res) {
-  res.send('item(get)');
+  Item.findById(req.params.id).exec(function (err, item) {
+    if (err) { return next(err); }
+    if (item === null) {
+      const err = new Error('Item not found');
+      err.status = 404;
+      return next(err);
+    }
+    res.render('item_detail', {title: `${item.manufacturer} ${item.name}`, item: item})
+  })
 };
 
-exports.item_list = function (req, res) {
-  res.send('item list')
+exports.item_list = function (req, res, next) {
+  Item.find().sort([['name', 'ascending']])
+    .exec(function (err, list_items) {
+      if (err) { return next(err); }
+      res.render('item_list', {title: 'All items', item_list: list_items})
+  })
 };
