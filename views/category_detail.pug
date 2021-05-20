@@ -2,3 +2,10 @@ extends layout
 block content 
 
   h1 #{category.name}
+
+  ul
+    each item in items
+      li 
+        a(href=item.url) #{item.name}
+    else 
+      p There are no items here
