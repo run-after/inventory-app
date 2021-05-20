@@ -35,3 +35,33 @@
 
 .main-content {
 }
+
+.category-index {
+}
+
+.category-index .title {
+  font-size: 2em;
+  text-align: center;
+  margin: 10px;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.category-item {
+  height: 100px;
+  width: 100px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 5px;
+  text-align: center;
+}
+
+.category-name {
+  color: black;
+  word-wrap: break-word;
+}
