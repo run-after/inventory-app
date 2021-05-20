@@ -28,7 +28,7 @@ exports.item_update_post = function (req, res) {
 };
 
 exports.item_detail = function (req, res) {
-  Item.findById(req.params.id).exec(function (err, item) {
+  Item.findById(req.params.id).populate('category').exec(function (err, item) {
     if (err) { return next(err); }
     if (item === null) {
       const err = new Error('Item not found');
