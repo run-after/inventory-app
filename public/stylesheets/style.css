@@ -1,8 +1,37 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.header {
+  background: blue;
+  color: white;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-a {
-  color: #00B7FF;
+.header-title {
+  font-size: 3em;
+}
+
+.header .nav-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.nav-links li {
+  margin: 0 5px;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+}
+
+.nav-links li a:hover {
+  opacity: 0.5;
+}
+
+.main-content {
 }
