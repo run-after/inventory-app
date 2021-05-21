@@ -2,6 +2,7 @@ extends layout
 block content 
 
   h1.title=title
+  a(href=category._id + '/update') Update this category
   if !items.length
     a(href=category._id + '/delete') Delete this category
 
