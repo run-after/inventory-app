@@ -2,6 +2,8 @@ extends layout
 block content 
 
   h1.title=title
+  if !items.length
+    a(href=category._id + '/delete') Delete this category
 
   ul.item-list
     each item in items
