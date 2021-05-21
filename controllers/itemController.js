@@ -40,7 +40,7 @@ exports.item_detail = function (req, res) {
 };
 
 exports.item_list = function (req, res, next) {
-  Item.find().sort([['name', 'ascending']])
+  Item.find().sort([['name', 'ascending']]).populate('category')
     .exec(function (err, list_items) {
       if (err) { return next(err); }
       res.render('item_list', {title: 'All items', item_list: list_items})
