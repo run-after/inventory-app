@@ -8,7 +8,7 @@ block content
     div.create-category-form
       label#name(for='name') Category:
       input#name(type='text', placeholder='Wheels, Tires, etc...', name='name' value=(undefined===category ? '' : category.name))
-    button(type='subnmit') Submit
+    button.primary-btn(type='subnmit') Submit
 
   if errors 
     ul 
