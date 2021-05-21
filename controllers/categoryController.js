@@ -80,12 +80,36 @@ exports.category_delete_post = function (req, res, next) {
 };
 
 exports.category_update_get = function (req, res) {
-  res.send('category/update (get)')
+  Category.findById(req.params.id).exec(function (err, category) {
+    if (err) { return next(err); }
+    if (category.id === null) {
+      const err = new Error('Category not found');
+      err.status = 404;
+      return next(err);
+    };
+    res.render('category_form', { title: 'Update Cateogry', category: category });
+  });
 };
 
-exports.category_update_post = function (req, res) {
-  res.send('category/update (post)')
-};
+exports.category_update_post = [
+  body('name', 'Category name required').trim().isLength({ min: 1 }).escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    const category = new Category({
+      name: req.body.name,
+      _id: req.params.id
+    });
+    if (!errors.isEmpty()) {
+      res.render('category_form', { title: 'Update Category', category: category, errors: errors.array() });
+      return;
+    } else {
+      Category.findByIdAndUpdate(req.params.id, category, {}, function (err, category) {
+        if (err) { return next(err); }
+        res.redirect(category.url);
+      });
+    };
+  }
+];
 
 exports.category_detail = function (req, res, next) {
   async.parallel({
