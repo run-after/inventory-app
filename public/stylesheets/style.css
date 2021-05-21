@@ -33,13 +33,7 @@
   opacity: 0.5;
 }
 
-.main-content {
-}
-
-.category-index {
-}
-
-.category-index .title {
+.title {
   font-size: 2em;
   text-align: center;
   margin: 10px;
@@ -72,15 +66,6 @@
 .category-name {
   color: black;
   word-wrap: break-word;
-}
-
-.item-index {
-}
-
-.item-index .title {
-  font-size: 2em;
-  text-align: center;
-  margin: 10px;
 }
 
 .item-list {

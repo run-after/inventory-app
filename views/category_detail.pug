@@ -1,11 +1,14 @@
 extends layout 
 block content 
 
-  h1 #{category.name}
+  h1.title=title
 
-  ul
+  ul.item-list
     each item in items
-      li 
-        a(href=item.url) #{item.name}
+      li.item
+        a(href=item.url).item-title #{item.manufacturer} #{item.name}
+        p.item-description #{item.description}
+        p.item-price $#{item.price} 
+        p.item-qty #{item.quantity} left in stock
     else 
-      p There are no items here
+      li There are none
