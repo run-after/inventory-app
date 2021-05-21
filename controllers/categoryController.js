@@ -4,17 +4,41 @@ const Item = require('../models/item');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
 
+// NEED TO CHANGE THIS
 exports.index = function (req, res) {
   res.render('index', { title: 'Inventory' });
 };
 
 exports.category_create_get = function (req, res) {
-  res.send('category/create (get)')
+  res.render('category_form', { title: 'Create Category' });
 };
 
-exports.category_create_post = function (req, res) {
-  res.send('category/create (post)')
-};
+exports.category_create_post = [
+  body('name', 'Category name required').trim().isLength({ min: 1 }).escape(),
+  
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const category = new Category({ name: req.body.name });
+
+    if (!errors.isEmpty()) {
+      res.render('category_form', { title: 'Create Category', category: category, errors: errors.array() });
+      return;
+    } else {
+      Category.findOne({ 'name': req.body.name }).exec((err, found_category) => {
+        if (err) { return next(err); }
+        if (found_category) {
+          res.redirect(found_category.url);
+        } else {
+          category.save(function (err) {
+            if (err) { return next(err); }
+            res.redirect(category.url);
+          });
+        };
+      });
+    };
+  }
+];
 
 exports.category_delete_get = function (req, res) {
   res.send('category/delete (get)')

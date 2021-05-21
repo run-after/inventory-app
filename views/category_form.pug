@@ -1,0 +1,16 @@
+extends layout 
+
+block content 
+
+  h1.title=title
+
+  form(method='POST' action='').form
+    div.create-category-form
+      label#name(for='name') Category:
+      input#name(type='text', placeholder='Wheels, Tires, etc...', name='name' value=(undefined===category ? '' : category.name))
+    button(type='subnmit') Submit
+
+  if errors 
+    ul 
+      for error in errors 
+        li!= error.msg
