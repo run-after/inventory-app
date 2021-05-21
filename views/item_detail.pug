@@ -1,3 +1,7 @@
 extends layout 
 block content 
-  h1=title
+  h1.title=title
+  div.item
+    p.item-description #{item.description}
+    p.item-price $#{item.price} 
+    p.item-qty #{item.quantity} left in stock
