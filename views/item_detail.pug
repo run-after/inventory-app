@@ -1,6 +1,7 @@
 extends layout 
 block content 
   h1.title=title
+  a(href=item._id + '/delete') Delete this item
   div.item
     p.item-description #{item.description}
     a.item-category(href=item.category.url) Category: #{item.category.name}
