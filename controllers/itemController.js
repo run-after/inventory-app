@@ -33,7 +33,6 @@ exports.item_create_post = [
     if (!errors.isEmpty()) {
       Category.find({}).exec(function (err, categories) {
         if (err) { return next(err); }
-        console.log(item)
         res.render('item_form', { title: 'Create item', categories: categories, item: item, errors: errors.array() })
       });
       return;
@@ -46,7 +45,7 @@ exports.item_create_post = [
   }
 ];
 
-exports.item_delete_get = function (req, res) {
+exports.item_delete_get = function (req, res, next) {
   Item.findById(req.params.id).exec(function (err, item) {
     if (err) { return next(err); }
     res.render('item_delete', { title: 'Delete item: ', item: item })
