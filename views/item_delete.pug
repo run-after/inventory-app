@@ -1,0 +1,12 @@
+extend layout 
+
+block content
+
+  h1.title #{title} #{item.manufacturer} #{item.name}
+
+  div.delete
+    p Do you really want to delete this item?
+
+    form(method='POST' action='')
+      input#itemid(type='hidden', name='itemid', required='true' value=item._id)
+      button.primary-btn(type='submit') Delete

@@ -47,11 +47,17 @@ exports.item_create_post = [
 ];
 
 exports.item_delete_get = function (req, res) {
-  res.send('item/:id/delete(get)');
+  Item.findById(req.params.id).exec(function (err, item) {
+    if (err) { return next(err); }
+    res.render('item_delete', { title: 'Delete item: ', item: item })
+  });
 };
 
-exports.item_delete_post = function (req, res) {
-  res.send('item/delete(post)');
+exports.item_delete_post = function (req, res, next) {
+  Item.findByIdAndRemove(req.params.id).exec(function (err, item) {
+    if (err) { return next(err); }
+    res.redirect('/items');
+  });
 };
 
 exports.item_update_get = function (req, res) {
