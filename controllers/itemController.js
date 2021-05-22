@@ -1,15 +1,50 @@
 const Item = require('../models/item');
+const Category = require('../models/category');
 
 const async = require('async');
 const { body, validationResult } = require('express-validator');
 
-exports.item_create_get = function (req, res) {
-  res.send('item/create(get)');
+exports.item_create_get = function (req, res, next) {
+  Category.find({}).exec(function (err, categories) {
+    if (err) { return next(err); }
+    res.render('item_form', { title: 'Create item', categories: categories })
+  });
 };
 
-exports.item_create_post = function (req, res) {
-  res.send('item/create(post)');
-};
+exports.item_create_post = [
+  body('manufacturer', 'You must give a manufacturer').trim().isLength({ min: 1 }).escape(),
+  body('name', 'You must give a name').trim().isLength({ min: 1 }).escape(),
+  body('description', 'You must give a description').trim().isLength({ min: 1 }).escape(),
+  body('category.*').escape(),
+  body('price', 'You must enter a price').trim().isInt().escape(),
+  body('quantity', 'You must give a quantity').trim().isInt().escape(),
+
+  function (req, res, next) {
+    const errors = validationResult(req);
+
+    const item = new Item({
+      manufacturer: req.body.manufacturer,
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      quantity: req.body.quantity
+    });
+    if (!errors.isEmpty()) {
+      Category.find({}).exec(function (err, categories) {
+        if (err) { return next(err); }
+        console.log(item)
+        res.render('item_form', { title: 'Create item', categories: categories, item: item, errors: errors.array() })
+      });
+      return;
+    } else {
+      item.save(function (err) {
+        if (err) { return next(err); }
+        res.redirect(item.url);
+      });
+    }
+  }
+];
 
 exports.item_delete_get = function (req, res) {
   res.send('item/:id/delete(get)');
