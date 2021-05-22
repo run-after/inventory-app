@@ -3,5 +3,6 @@ block content
   h1.title=title
   div.item
     p.item-description #{item.description}
+    a.item-category(href=item.category.url) Category: #{item.category.name}
     p.item-price $#{item.price} 
     p.item-qty #{item.quantity} left in stock
