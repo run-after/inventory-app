@@ -2,7 +2,7 @@ extends layout
 
 block content 
 
-  h1.title=title
+  h1.title #{title} item
   if errors 
     ul 
       for error in errors 
@@ -27,4 +27,4 @@ block content
     input#price(type='number' required='true' name='price' value=(undefined===item ? '' : item.price))
     label#quantity(for='quantity') Qty
     input#quantity(type='number' required='true' name='quantity' value=(undefined===item ? '' : item.quantity))
-    button.primary-btn(type='submit') Create item
+    button.primary-btn(type='submit') #{title} item
