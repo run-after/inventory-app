@@ -7,7 +7,7 @@ const { body, validationResult } = require('express-validator');
 exports.item_create_get = function (req, res, next) {
   Category.find({}).exec(function (err, categories) {
     if (err) { return next(err); }
-    res.render('item_form', { title: 'Create item', categories: categories })
+    res.render('item_form', { title: 'Create', categories: categories })
   });
 };
 
@@ -33,7 +33,7 @@ exports.item_create_post = [
     if (!errors.isEmpty()) {
       Category.find({}).exec(function (err, categories) {
         if (err) { return next(err); }
-        res.render('item_form', { title: 'Create item', categories: categories, item: item, errors: errors.array() })
+        res.render('item_form', { title: 'Create', categories: categories, item: item, errors: errors.array() })
       });
       return;
     } else {
@@ -59,13 +59,59 @@ exports.item_delete_post = function (req, res, next) {
   });
 };
 
-exports.item_update_get = function (req, res) {
-  res.send('item/update(get)');
+exports.item_update_get = function (req, res, next) {
+  async.parallel({
+    item: function (callback) {
+      Item.findById(req.params.id).exec(callback);
+    },
+    categories: function (callback) {
+      Category.find({}).exec(callback);
+    }
+  }, function (err, results) {
+    if (err) { return next(err); }
+    if (results.item === null) {
+      const err = new Error('Item not found');
+      err.status = 404;
+      return next(err);
+    }
+    res.render('item_form', { title: 'Update', item: results.item, categories: results.categories });
+  });
 };
 
-exports.item_update_post = function (req, res) {
-  res.send('item/upate(post)');
-};
+exports.item_update_post = [
+  body('manufacturer', 'You must give a manufacturer').trim().isLength({ min: 1 }).escape(),
+  body('name', 'You must give a name').trim().isLength({ min: 1 }).escape(),
+  body('description', 'You must give a description').trim().isLength({ min: 1 }).escape(),
+  body('category.*').escape(),
+  body('price', 'You must enter a price').trim().isInt().escape(),
+  body('quantity', 'You must give a quantity').trim().isInt().escape(),
+
+  function (req, res, next) {
+    const errors = validationResult(req);
+
+    const item = new Item({
+      manufacturer: req.body.manufacturer,
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      quantity: req.body.quantity,
+      _id: req.params.id
+    });
+    if (!errors.isEmpty()) {
+      Category.find({}).exec(function (err, categories) {
+        if (err) { return next(err); }
+        res.render('item_form', { title: 'Update', categories: categories, item: item, errors: errors.array() })
+      });
+      return;
+    } else {
+      Item.findByIdAndUpdate(req.params.id, item, {}, function (err) {
+        if (err) { return next(err); }
+        res.redirect(item.url);
+      });
+    };
+  }
+];
 
 exports.item_detail = function (req, res) {
   Item.findById(req.params.id).populate('category').exec(function (err, item) {
