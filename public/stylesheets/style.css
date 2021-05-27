@@ -83,13 +83,29 @@
 }
 
 .item {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
   height: 200px;
   border: 1px solid black;
   border-radius: 5px;
   margin: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.item-image-box {
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 75%;
+  align-self: center;
+}
+
+.item-image {
+  height: 100%;
 }
 
 .item > * {
