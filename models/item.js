@@ -9,7 +9,8 @@ const ItemSchema = new Schema(
     description: { type: String, required: true, maxLength: 1000 },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
     price: { type: Number, required: true },
-    quantity: { type: Number, required: true }
+    quantity: { type: Number, required: true },
+    image: { type: String }
   }
 );
 
