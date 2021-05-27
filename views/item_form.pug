@@ -8,7 +8,7 @@ block content
       for error in errors 
         li!=error.msg
 
-  form(method='POST' action='').form
+  form(method='POST' action='' enctype='multipart/form-data').form
     input#manufacturer(type='text' required='true' name='manufacturer' value=(undefined===item ? '' : item.manufacturer) placeholder='Manufacturer')
     input#name(type='text' required='true' name='name' value=(undefined===item ? '' : item.name) placeholder='name')
     textarea#description(required='true' name='description' placeholder='Description') #{undefined===item ? '' : item.description}
@@ -27,4 +27,5 @@ block content
     input#price(type='number' required='true' name='price' value=(undefined===item ? '' : item.price))
     label#quantity(for='quantity') Qty
     input#quantity(type='number' required='true' name='quantity' value=(undefined===item ? '' : item.quantity))
+    input#image(type='file' name='uploaded_file')
     button.primary-btn(type='submit') #{title} item
