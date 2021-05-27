@@ -76,6 +76,9 @@ exports.item_delete_get = function (req, res, next) {
 exports.item_delete_post = function (req, res, next) {
   Item.findByIdAndRemove(req.params.id).exec(function (err, item) {
     if (err) { return next(err); }
+    fs.unlink('./public/images/' + item.image, () => {
+      console.log('Image deleted')
+    });
     res.redirect('/items');
   });
 };
