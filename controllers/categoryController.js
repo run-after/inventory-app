@@ -5,8 +5,8 @@ const async = require('async');
 const { body, validationResult } = require('express-validator');
 
 // NEED TO CHANGE THIS
-exports.index = function (req, res) {
-  res.render('index', { title: 'Inventory' });
+exports.index = function (req, res, next) {
+  res.redirect('/categories');
 };
 
 exports.category_create_get = function (req, res) {
