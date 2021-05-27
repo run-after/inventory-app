@@ -4,7 +4,6 @@ const Item = require('../models/item');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
 
-// NEED TO CHANGE THIS
 exports.index = function (req, res, next) {
   res.redirect('/categories');
 };
