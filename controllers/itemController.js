@@ -4,6 +4,10 @@ const Category = require('../models/category');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
 
+const fs = require('fs');
+
+const MAX_IMAGE_SIZE = 2097152;
+
 exports.item_create_get = function (req, res, next) {
   Category.find({}).exec(function (err, categories) {
     if (err) { return next(err); }
@@ -12,15 +16,30 @@ exports.item_create_get = function (req, res, next) {
 };
 
 exports.item_create_post = [
+
   body('manufacturer', 'You must give a manufacturer').trim().isLength({ min: 1 }).escape(),
   body('name', 'You must give a name').trim().isLength({ min: 1 }).escape(),
   body('description', 'You must give a description').trim().isLength({ min: 1 }).escape(),
   body('category.*').escape(),
   body('price', 'You must enter a price').trim().isInt().escape(),
   body('quantity', 'You must give a quantity').trim().isInt().escape(),
+  body('image').custom((value, {req}) => {
+    if (req.file.size > MAX_IMAGE_SIZE) { throw new Error('too big') }
+    return true;
+  }),
 
   function (req, res, next) {
     const errors = validationResult(req);
+    let image;
+    if (req.file) {
+      if (req.file.size > MAX_IMAGE_SIZE) {
+        fs.unlink('./public/images/' + req.file.originalname);
+      } else {
+        image = req.file.originalname;  
+      };
+    } else {
+      image = undefined;
+    };
 
     const item = new Item({
       manufacturer: req.body.manufacturer,
@@ -28,8 +47,10 @@ exports.item_create_post = [
       description: req.body.description,
       category: req.body.category,
       price: req.body.price,
-      quantity: req.body.quantity
+      quantity: req.body.quantity,
+      image: image
     });
+
     if (!errors.isEmpty()) {
       Category.find({}).exec(function (err, categories) {
         if (err) { return next(err); }
