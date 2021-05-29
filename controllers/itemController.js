@@ -7,7 +7,7 @@ const { body, validationResult } = require('express-validator');
 const fs = require('fs');
 
 const MAX_IMAGE_SIZE = 2097152;
-const ALLOWED_EXT = ['image/jpg', 'image/png', 'image/jpeg'];
+const ALLOWED_EXT = ['image/png', 'image/jpg', 'image/jpeg'];
 
 exports.item_create_get = function (req, res, next) {
   Category.find({}).exec(function (err, categories) {
@@ -24,11 +24,9 @@ exports.item_create_post = [
   body('category.*').escape(),
   body('price', 'You must enter a price').trim().isInt().escape(),
   body('quantity', 'You must give a quantity').trim().isInt().escape(),
-  body('image').custom((value, {req}) => {
-    if (req.file.size > MAX_IMAGE_SIZE) { throw new Error('too big') }
-    return true;
-  }).custom((value, { req }) => {
-    if (!ALLOWED_EXT.includes(req.file.mimetype)) { throw new Error('Allowed extentions are jpeg, png, jpg')}
+  body('image').custom((value, { req }) => {
+    if (req.file.size > MAX_IMAGE_SIZE) { throw new Error('File too big - Max size 2MB') };
+    if (!ALLOWED_EXT.includes(req.file.mimetype)) { throw new Error('Allowed extentions are jpeg, png, jpg') };
     return true;
   }),
 
@@ -36,8 +34,13 @@ exports.item_create_post = [
     const errors = validationResult(req);
     let image;
     if (req.file) {
-      if (req.file.size > MAX_IMAGE_SIZE) {
-        fs.unlink('./public/images/' + req.file.originalname);
+      if (req.file.size > MAX_IMAGE_SIZE || !ALLOWED_EXT.includes(req.file.mimetype)) {
+        fs.unlink('./public/images/' + req.file.originalname, (err => {
+          if (err) console.log(err);
+          else {
+            console.log('file deleted');
+          }
+        }));
       } else {
         image = req.file.originalname;  
       };
