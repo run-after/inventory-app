@@ -7,6 +7,7 @@ const { body, validationResult } = require('express-validator');
 const fs = require('fs');
 
 const MAX_IMAGE_SIZE = 2097152;
+const ALLOWED_EXT = ['image/jpg', 'image/png', 'image/jpeg'];
 
 exports.item_create_get = function (req, res, next) {
   Category.find({}).exec(function (err, categories) {
@@ -25,6 +26,9 @@ exports.item_create_post = [
   body('quantity', 'You must give a quantity').trim().isInt().escape(),
   body('image').custom((value, {req}) => {
     if (req.file.size > MAX_IMAGE_SIZE) { throw new Error('too big') }
+    return true;
+  }).custom((value, { req }) => {
+    if (!ALLOWED_EXT.includes(req.file.mimetype)) { throw new Error('Allowed extentions are jpeg, png, jpg')}
     return true;
   }),
 
