@@ -9,9 +9,15 @@ block content
   ul.item-list
     each item in items
       li.item
-        a(href=item.url).item-title #{item.manufacturer} #{item.name}
-        p.item-description #{item.description}
-        p.item-price $#{item.price} 
-        p.item-qty #{item.quantity} left in stock
+        div.item-text
+          a(href=item.url).item-title #{item.manufacturer} #{item.name}
+          p.item-description #{item.description}
+          p.item-price $#{item.price} 
+          p.item-qty #{item.quantity} left in stock
+        div.item-image-box
+          if item.image !== undefined
+            image(src='../images/' + item.image).item-image
+          else 
+            p placeholder
     else 
       li There are none
