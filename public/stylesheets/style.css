@@ -91,6 +91,10 @@
   justify-content: space-between;
 }
 
+.item-heading {
+  font-weight: bold;
+}
+
 .item-text {
   display: flex;
   flex-direction: column;
